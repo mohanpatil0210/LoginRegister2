@@ -1,5 +1,6 @@
 package com.example.loginregister2;
 
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -30,6 +32,7 @@ public class RegisterActivity extends Activity
 
 	private void initview()
 	{
+		Log.e("init", "initview called");
 		etName = (EditText) this.findViewById(R.id.etName);
 		etMobile = (EditText) this.findViewById(R.id.etMobile);
 		etEmail = (EditText) this.findViewById(R.id.etEmail);
@@ -51,18 +54,6 @@ public class RegisterActivity extends Activity
 		finish();
 	}
 
-	// validating email id
-	private boolean isValidEmail(String email)
-	{
-		String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-		Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-		Matcher matcher = pattern.matcher(email);
-		return matcher.matches();
-	}
-
-	// validating password with retype password
 	private boolean isValidPassword(String pass)
 	{
 		if (pass != null && pass.length() > 6)
@@ -71,28 +62,55 @@ public class RegisterActivity extends Activity
 		}
 		return false;
 	}
-
-	private boolean isNumeric(String str)
+	
+	private boolean isValidMobile(String str)
 	{
-		int i;
-		for (i = 0; i < str.length(); i++)
-		{
+		String expression = "^[0-9-1+]{10,15}$";
+		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(str);
+		return (matcher.matches()) ? true : false;
+	}
 
-		}
-		return false;
-
+	private boolean isValidEmail(String str)
+	{
+		Log.e("Email Input", str);
+		String expression = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(str);
+		return (matcher.matches()) ? true : false;
 	}
 
 	public void onRegisterClick(View v)
 	{
-		String strMsg="";
-		if(etName.length() <= 0)
+		boolean error = false;
+
+		if (etName.getText().length() <= 0)
 		{
-			//Dialog diag = new Dialog(this);
-			//diag.setContentView(layoutResID);
-			
-			strMsg += "Enter your Name\n"; 
+			etName.setError("Enter your Name");
+			error = true;
 		}
-		//if(etMobile.length() > 10 && 
+
+		if (!isValidMobile(etMobile.getText().toString()))
+		{
+			etMobile.setError("Enter valid Mobile Number");
+			error = true;
+		}
+
+		if (!isValidEmail(etEmail.getText().toString()))
+		{
+			etEmail.setError("Enter valid Email ID");
+			error = true;
+		}
+
+		if (etCity.getText().length() <= 0)
+		{
+			etCity.setError("Enter City Name");
+			error = true;
+		}
+
+		if (error == true)
+		{
+			//Write this information in database
+		}
 	}
 }
