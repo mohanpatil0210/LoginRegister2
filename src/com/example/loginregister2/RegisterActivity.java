@@ -93,6 +93,6 @@ public class RegisterActivity extends Activity
 			
 			strMsg += "Enter your Name\n"; 
 		}
-		if(etMobile.length() > 10 && 
+		//if(etMobile.length() > 10 && 
 	}
 }
